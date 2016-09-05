@@ -1,0 +1,24 @@
+# Permalinks
+#
+# Use of `relative_permalinks` ensures post links from the index work properly.
+permalink:           pretty
+# relative_permalinks: true
+
+# Setup
+title:               James Jackson
+tagline:             'Random Musings'
+description:         ''
+url:                 http://blog.openroar.com
+baseurl:             ''
+paginate:            5
+
+# About/contact
+author:
+  name:              James Jackson
+  url:               
+  email:             fiberhog@gmail.com
+
+# Custom vars
+version:             1.0.0
+
+gems: [jekyll-paginate]

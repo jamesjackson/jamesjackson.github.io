@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+ <title>James Jackson</title>
+ <link href="http://blog.openroar.com/atom.xml" rel="self"/>
+ <link href="http://blog.openroar.com/"/>
+ <updated>2016-09-05T17:51:02-05:00</updated>
+ <id>http://blog.openroar.com</id>
+ <author>
+   <name>James Jackson</name>
+   <email>fiberhog@gmail.com</email>
+ </author>
+
+ 
+ <entry>
+   <title>Drone LTE (Part I)</title>
+   <link href="http://blog.openroar.com/2016/09/03/drone-lte-part1/"/>
+   <updated>2016-09-03T00:00:00-05:00</updated>
+   <id>http://blog.openroar.com/2016/09/03/drone-lte-part1</id>
+   <content type="html">&lt;h3 id=&quot;drone&quot;&gt;Drone&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://3dr.com/solo-drone/specs/&quot;&gt;3DR Solo&lt;/a&gt; w/Gimbal and GoPro HERO4 camera&lt;/p&gt;
+
+&lt;p&gt;The &lt;a href=&quot;https://dev.3dr.com/concept-architecture.html&quot;&gt;Solo architecture&lt;/a&gt; shows the primary companion computer (iMX.6) that runs Yocto Linux. The &lt;a href=&quot;https://dev.3dr.com/hardware-accessorybay.html&quot;&gt;accessory port&lt;/a&gt; provides USB access to the iMX.6 via a breakout board, but the kernel only includes support for USB serial devices (FTDI and CDC-ACM). Adding a secondary companion computer provides some additional flexibility, and reduces the chances of bricking the primary.&lt;/p&gt;
+
+&lt;h3 id=&quot;secondary-companion-computer&quot;&gt;Secondary Companion Computer&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.hardkernel.com/main/products/prdt_info.php?g_code=G145326484280&quot;&gt;Odroid C0&lt;/a&gt; with battery&lt;/p&gt;
+
+&lt;p&gt;One really nice aspect of the C0 is the integrated battery power circuit. The Solo accessory port can provide 5V power, but it’s limited to 1.05A.&lt;/p&gt;
+
+&lt;p&gt;Load the Ubuntu 16.04 image onto the micro SD card from a Macbook Pro:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;gunzip -d ~/Downloads/ubuntu-16.04-mate-odroid-c1-20160727.img.xz
+diskutil unmountDisk /dev/disk2
+sudo dd &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;~/Downloads/ubuntu-16.04-mate-odroid-c1-20160727.img &lt;span class=&quot;nv&quot;&gt;of&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/dev/rdisk2 &lt;span class=&quot;nv&quot;&gt;bs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1m&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;lte-dongle&quot;&gt;LTE dongle&lt;/h3&gt;
+
+&lt;p&gt;Aircard 340u (AT&amp;amp;T Beam)&lt;/p&gt;
+
+&lt;p&gt;Some good background on &lt;a href=&quot;https://aleksander.es/data/FOSDEM%202014%20-%20LTE%20in%20your%20Linux%20based%20system.pdf&quot;&gt;LTE in Linux&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The Aircard 340u is not correctly recognized in Linux until a &lt;a href=&quot;http://www.downloads.netgear.com/files/aircard/AC340U_linux_patch_v4.zip&quot;&gt;firmware patch&lt;/a&gt; is applied. The patch disables the Windows 8 MBIM Identity Morphing.&lt;/p&gt;
+
+&lt;p&gt;Note that the dongle is not always recognized on boot. However, it does show up after pulling/re-inserting. Modem Manager should show something like this:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;odroid@odroid:~$ &lt;/span&gt;mmcli -L
+
+Found 1 modems:
+	/org/freedesktop/ModemManager1/Modem/0 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;Sierra Wireless, Incorporated] AirCard 340U
+	
+&lt;span class=&quot;gp&quot;&gt;odroid@odroid:~$ &lt;/span&gt;mmcli -m 0
+
+/org/freedesktop/ModemManager1/Modem/0 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;device id &lt;span class=&quot;s1&quot;&gt;'f9ec6c6d9e9a9e248e7fd69e9b51e480bb493cd0'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  -------------------------
+  Hardware |   manufacturer: &lt;span class=&quot;s1&quot;&gt;'Sierra Wireless, Incorporated'&lt;/span&gt;
+           |          model: &lt;span class=&quot;s1&quot;&gt;'AirCard 340U'&lt;/span&gt;
+           |       revision: &lt;span class=&quot;s1&quot;&gt;'NTG9X15C_01.13.12.14 r18981 ntgrbc-fwbuild1 2014/07/11 13:48:17'&lt;/span&gt;
+           |      supported: &lt;span class=&quot;s1&quot;&gt;'gsm-umts
+           |                  lte
+           |                  gsm-umts, lte'&lt;/span&gt;
+           |        current: &lt;span class=&quot;s1&quot;&gt;'gsm-umts, lte'&lt;/span&gt;
+           |   equipment id: &lt;span class=&quot;s1&quot;&gt;'013323000538430'&lt;/span&gt;
+  -------------------------
+  System   |         device: &lt;span class=&quot;s1&quot;&gt;'/sys/devices/lm0/usb2/2-1'&lt;/span&gt;
+           |        drivers: &lt;span class=&quot;s1&quot;&gt;'qmi_wwan, qcserial'&lt;/span&gt;
+           |         plugin: &lt;span class=&quot;s1&quot;&gt;'Sierra'&lt;/span&gt;
+           |   primary port: &lt;span class=&quot;s1&quot;&gt;'cdc-wdm0'&lt;/span&gt;
+           |          ports: &lt;span class=&quot;s1&quot;&gt;'cdc-wdm0 (qmi), wwan0 (net)'&lt;/span&gt;
+  -------------------------
+  Numbers  |           own : &lt;span class=&quot;s1&quot;&gt;'1512*******'&lt;/span&gt;
+  -------------------------
+  Status   |           lock: &lt;span class=&quot;s1&quot;&gt;'sim-pin2'&lt;/span&gt;
+           | unlock retries: &lt;span class=&quot;s1&quot;&gt;'sim-pin (3), sim-pin2 (3), sim-puk (10), sim-puk2 (10)'&lt;/span&gt;
+           |          state: &lt;span class=&quot;s1&quot;&gt;'registered'&lt;/span&gt;
+           |    power state: &lt;span class=&quot;s1&quot;&gt;'on'&lt;/span&gt;
+           |    access tech: &lt;span class=&quot;s1&quot;&gt;'lte'&lt;/span&gt;
+           | signal quality: &lt;span class=&quot;s1&quot;&gt;'55'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;recent&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  -------------------------
+  Modes    |      supported: &lt;span class=&quot;s1&quot;&gt;'allowed: 2g, 3g, 4g; preferred: none'&lt;/span&gt;
+           |        current: &lt;span class=&quot;s1&quot;&gt;'allowed: 2g, 3g, 4g; preferred: none'&lt;/span&gt;
+  -------------------------
+  Bands    |      supported: &lt;span class=&quot;s1&quot;&gt;'dcs, egsm, pcs, g850, u2100, u1900, u850, eutran-ii, eutran-iv, eutran-v, eutran-xvii'&lt;/span&gt;
+           |        current: &lt;span class=&quot;s1&quot;&gt;'dcs, egsm, pcs, g850, u2100, u1900, u850, eutran-ii, eutran-iv, eutran-v, eutran-xvii'&lt;/span&gt;
+  -------------------------
+  IP       |      supported: &lt;span class=&quot;s1&quot;&gt;'ipv4, ipv6, ipv4v6'&lt;/span&gt;
+  -------------------------
+  3GPP     |           imei: &lt;span class=&quot;s1&quot;&gt;'***************'&lt;/span&gt;
+           |  enabled locks: &lt;span class=&quot;s1&quot;&gt;'net-pers'&lt;/span&gt;
+           |    operator id: &lt;span class=&quot;s1&quot;&gt;'310410'&lt;/span&gt;
+           |  operator name: &lt;span class=&quot;s1&quot;&gt;'AT&amp;amp;T'&lt;/span&gt;
+           |   subscription: &lt;span class=&quot;s1&quot;&gt;'unknown'&lt;/span&gt;
+           |   registration: &lt;span class=&quot;s1&quot;&gt;'home'&lt;/span&gt;
+  -------------------------
+  SIM      |           path: &lt;span class=&quot;s1&quot;&gt;'/org/freedesktop/ModemManager1/SIM/0'&lt;/span&gt;
+
+  -------------------------
+  Bearers  |          paths: ‘none&lt;span class=&quot;s1&quot;&gt;'&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Install QMI utilities:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;odroid@odroid:~$ &lt;/span&gt;sudo apt-get install libqmi-utils&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Check signal strength:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;odroid@odroid:~$ &lt;/span&gt;sudo qmicli -d /dev/cdc-wdm0    --nas-get-signal-strength --device-open-proxy
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;/dev/cdc-wdm0] Successfully got signal strength
+Current:
+	Network &lt;span class=&quot;s1&quot;&gt;'lte'&lt;/span&gt;: &lt;span class=&quot;s1&quot;&gt;'-81 dBm'&lt;/span&gt;
+Other:
+	Network &lt;span class=&quot;s1&quot;&gt;'cdma-1xevdo'&lt;/span&gt;: &lt;span class=&quot;s1&quot;&gt;'-125 dBm'&lt;/span&gt;
+RSSI:
+	Network &lt;span class=&quot;s1&quot;&gt;'lte'&lt;/span&gt;: &lt;span class=&quot;s1&quot;&gt;'-81 dBm'&lt;/span&gt;
+	Network &lt;span class=&quot;s1&quot;&gt;'cdma-1xevdo'&lt;/span&gt;: &lt;span class=&quot;s1&quot;&gt;'-125 dBm'&lt;/span&gt;
+ECIO:
+	Network &lt;span class=&quot;s1&quot;&gt;'lte'&lt;/span&gt;: &lt;span class=&quot;s1&quot;&gt;'-31.5 dBm'&lt;/span&gt;
+	Network &lt;span class=&quot;s1&quot;&gt;'cdma-1xevdo'&lt;/span&gt;: &lt;span class=&quot;s1&quot;&gt;'-2.5 dBm'&lt;/span&gt;
+IO: &lt;span class=&quot;s1&quot;&gt;'-106 dBm'&lt;/span&gt;
+SINR: &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;8&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'9.0 dB'&lt;/span&gt;
+RSRQ:
+	Network &lt;span class=&quot;s1&quot;&gt;'lte'&lt;/span&gt;: &lt;span class=&quot;s1&quot;&gt;'-16 dB'&lt;/span&gt;
+SNR:
+	Network &lt;span class=&quot;s1&quot;&gt;'lte'&lt;/span&gt;: &lt;span class=&quot;s1&quot;&gt;'-3.6 dB'&lt;/span&gt;
+RSRP:
+	Network &lt;span class=&quot;s1&quot;&gt;'lte'&lt;/span&gt;: &lt;span class=&quot;s1&quot;&gt;'-115 dBm’&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Start the connection:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;odroid@odroid:~$ &lt;/span&gt;sudo qmicli -d /dev/cdc-wdm0 --wds-start-network&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;  --client-no-release-cid --device-open-proxy
+
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;/dev/cdc-wdm0] Network started
+	Packet data handle: &lt;span class=&quot;s1&quot;&gt;'1143419264'&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;/dev/cdc-wdm0] Client ID not released:
+	Service: &lt;span class=&quot;s1&quot;&gt;'wds'&lt;/span&gt;
+	    CID: &lt;span class=&quot;s1&quot;&gt;'1'&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Bring up the IP interface:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;odroid@odroid:~$ &lt;/span&gt;sudo dhclient wwan0
+
+&lt;span class=&quot;gp&quot;&gt;odroid@odroid:~$ &lt;/span&gt;ifconfig wwan0
+wwan0     Link encap:Ethernet  HWaddr 02:41:05:b1:61:86  
+          inet addr:10.165.72.130  Bcast:10.165.72.131  Mask:255.255.255.252
+          inet6 addr: fe80::41:5ff:feb1:6186/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1430  Metric:1
+          RX packets:3 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:49 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:906 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;906.0 B&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;  TX bytes:7368 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;7.3 KB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Remove the default route associated with the WiFi interface:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;odroid@odroid:~$ &lt;/span&gt;netstat -nr
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
+0.0.0.0         10.165.72.129   0.0.0.0         UG        0 0          0 wwan0
+0.0.0.0         192.168.1.254   0.0.0.0         UG        0 0          0 enx8cae4cf5675c
+10.165.72.128   0.0.0.0         255.255.255.252 U         0 0          0 wwan0
+169.254.0.0     0.0.0.0         255.255.0.0     U         0 0          0 enx8cae4cf5675c
+192.168.1.0     0.0.0.0         255.255.255.0   U         0 0          0 enx8cae4cf5675c
+
+&lt;span class=&quot;gp&quot;&gt;odroid@odroid:~$ &lt;/span&gt;sudo route del -net 0.0.0.0/0 gw 192.168.1.254&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;It’s alive !&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;odroid@odroid:~$ &lt;/span&gt;ping 8.8.8.8
+PING 8.8.8.8 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;8.8.8.8&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 56&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;84&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; bytes of data.
+64 bytes from 8.8.8.8: &lt;span class=&quot;nv&quot;&gt;icmp_seq&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1 &lt;span class=&quot;nv&quot;&gt;ttl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;57 &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;127 ms
+64 bytes from 8.8.8.8: &lt;span class=&quot;nv&quot;&gt;icmp_seq&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2 &lt;span class=&quot;nv&quot;&gt;ttl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;57 &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;160 ms
+64 bytes from 8.8.8.8: &lt;span class=&quot;nv&quot;&gt;icmp_seq&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;3 &lt;span class=&quot;nv&quot;&gt;ttl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;57 &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;66.8 ms
+64 bytes from 8.8.8.8: &lt;span class=&quot;nv&quot;&gt;icmp_seq&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;4 &lt;span class=&quot;nv&quot;&gt;ttl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;57 &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;131 ms
+64 bytes from 8.8.8.8: &lt;span class=&quot;nv&quot;&gt;icmp_seq&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;5 &lt;span class=&quot;nv&quot;&gt;ttl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;57 &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;318 ms
+64 bytes from 8.8.8.8: &lt;span class=&quot;nv&quot;&gt;icmp_seq&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;6 &lt;span class=&quot;nv&quot;&gt;ttl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;57 &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;198 ms
+^C
+--- 8.8.8.8 ping statistics ---
+6 packets transmitted, 6 received, 0% packet loss, &lt;span class=&quot;nb&quot;&gt;time &lt;/span&gt;5849ms
+rtt min/avg/max/mdev &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 66.814/167.198/318.361/78.230 ms&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+</content>
+ </entry>
+ 
+
+</feed>
