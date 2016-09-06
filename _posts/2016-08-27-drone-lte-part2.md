@@ -9,7 +9,7 @@ This part introduces a cloud-based Ground Control Station (GCS), sets up telemet
 
 [MAVProxy](http://qgroundcontrol.org/mavlink/mavproxy_startpage) running on an Ubuntu 16.04 droplet on [Digital Ocean](https://www.digitalocean.com/).
 
-For the initial proof-of-concept, a simple GCS in the cloud will do. This will be the final destination of the [MAVLink](http://qgroundcontrol.org/mavlink/start) telemetry messaging. Ideally, ICE/STUN/TURN (Voice-over-IP folks will recognize these !) would allow a GCS on a laptop (also behind a NAT) to communicate directly with the LTE-connected drone.
+For the initial proof-of-concept, a simple GCS in the cloud will do. This will be the final endpoint for the [MAVLink](http://qgroundcontrol.org/mavlink/start) telemetry messaging. Ideally, ICE/STUN/TURN (Voice-over-IP folks will recognize these !) would allow a GCS on a laptop (also behind a NAT) to communicate directly with the LTE-connected drone.
 
 Install MAVProxy on the droplet (note that only Python3 is installed by default):
 {% highlight bash %}
@@ -75,15 +75,17 @@ Start a copter simulation on the Odroid C0 (binds to port 5760):
 dronekit-sitl ~/ardupilot/ArduCopter/ArduCopter.elf
 {% endhighlight %}
 
-Forward the telemetry to the cloud GCS (port 14550) from the Odroid C0:
+Connect Odroid C0 via LTE as described in Part I.
+
+Forward the telemetry to the cloud GCS from the Odroid C0:
 {% highlight bash %}
-mavproxy.py --master tcp:127.0.0.1:5760 --out 138.68.26.39:14550
+mavproxy.py --master tcp:127.0.0.1:5760 --out <Droplet IP>:14550
 {% endhighlight %}
 
-Start up the cloud GCS on the droplet:
+Start the cloud GCS on the droplet:
 {% highlight bash %}
-mavproxy.py —master=udp:138.68.26.39:14550
+mavproxy.py —master=udp:<Droplet IP>:14550
 {% endhighlight %}
 
-The cloud GCS should now have control of the simulated copter !
+The cloud GCS should now have control of the simulated copter via LTE !
 

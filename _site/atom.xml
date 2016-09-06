@@ -4,7 +4,7 @@
  <title>James Jackson</title>
  <link href="http://blog.openroar.com/atom.xml" rel="self"/>
  <link href="http://blog.openroar.com/"/>
- <updated>2016-09-05T19:18:43-05:00</updated>
+ <updated>2016-09-06T09:29:33-05:00</updated>
  <id>http://blog.openroar.com</id>
  <author>
    <name>James Jackson</name>
@@ -13,17 +13,66 @@
 
  
  <entry>
+   <title>Drone LTE (Part III)</title>
+   <link href="http://blog.openroar.com/2016/09/03/drone-lte-part3/"/>
+   <updated>2016-09-03T00:00:00-05:00</updated>
+   <id>http://blog.openroar.com/2016/09/03/drone-lte-part3</id>
+   <content type="html">&lt;p&gt;This part establishes the communication between the secondary companion computer and the drone (the final piece of the puzzle), and tests end-to-end telemetry between Solo and the cloud GCS.&lt;/p&gt;
+
+&lt;h3 id=&quot;dronecompanion-computer-usb-connection&quot;&gt;Drone/Companion Computer USB Connection&lt;/h3&gt;
+
+&lt;p&gt;A &lt;a href=&quot;http://viresity.com/product/3dr-solo-accessory-breakout-board/&quot;&gt;breakout board&lt;/a&gt; provides a micro USB OTG interface to Solo via the &lt;a href=&quot;https://dev.3dr.com/hardware-accessorybay.html&quot;&gt;accessory port&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Connecting the Odroid C0 to Solo via a USB OTG cable creates a serial device (/dev/ttyACM0) on the Odroid C0, and a serial device (/dev/ttyGS0) on the Solo. By default, Solo supports login via the /dev/ttyGS0 device.&lt;/p&gt;
+
+&lt;p&gt;SSH into Solo as described &lt;a href=&quot;https://dev.3dr.com/starting-network.html&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Disable login via /dev/ttyGS0 on Solo by commenting out this line in /etc/inittab:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;2:2345:respawn:/sbin/getty 115200 ttyGS0 vt100&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;and re-reading inittab:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;init q&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Connect Solo to the Internet as described &lt;a href=&quot;https://dev.3dr.com/starting-utils.html&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Install MAVProxy on Solo:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;smart install mavproxy&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;end-to-end-testing&quot;&gt;End-to-end Testing&lt;/h3&gt;
+
+&lt;p&gt;Start the cloud GCS on the droplet:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;mavproxy.py —master&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;udp:&amp;lt;Droplet IP&amp;gt;:14550&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Connect Odroid C0 via LTE as described in Part I.&lt;/p&gt;
+
+&lt;p&gt;Setup Odroid C0 to forward the telemetry from Solo (/dev/ttyACM0) to the cloud GCS:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;sudo mavproxy.py --master /dev/ttyACM0 --out &amp;lt;Droplet IP&amp;gt;:14550&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Setup Solo to forward the telemetry to Odroid C0 (/dev/ttyGS0):&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;mavproxy.py --master&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;udpin:0.0.0.0:14550 --out /dev/ttyGS0&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;The cloud GCS should now have control of Solo via LTE !&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>Drone LTE (Part II)</title>
-   <link href="http://blog.openroar.com/2016/09/05/drone-lte-part2/"/>
-   <updated>2016-09-05T00:00:00-05:00</updated>
-   <id>http://blog.openroar.com/2016/09/05/drone-lte-part2</id>
+   <link href="http://blog.openroar.com/2016/08/27/drone-lte-part2/"/>
+   <updated>2016-08-27T00:00:00-05:00</updated>
+   <id>http://blog.openroar.com/2016/08/27/drone-lte-part2</id>
    <content type="html">&lt;p&gt;This part introduces a cloud-based Ground Control Station (GCS), sets up telemetry forwarding from the secondary companion computer, and tests via a simulated vehicle.&lt;/p&gt;
 
 &lt;h3 id=&quot;cloud-gcs&quot;&gt;Cloud GCS&lt;/h3&gt;
 
 &lt;p&gt;&lt;a href=&quot;http://qgroundcontrol.org/mavlink/mavproxy_startpage&quot;&gt;MAVProxy&lt;/a&gt; running on an Ubuntu 16.04 droplet on &lt;a href=&quot;https://www.digitalocean.com/&quot;&gt;Digital Ocean&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;For the initial proof-of-concept, a simple GCS in the cloud will do. This will be the final destination of the &lt;a href=&quot;http://qgroundcontrol.org/mavlink/start&quot;&gt;MAVLink&lt;/a&gt; telemetry messaging. Ideally, ICE/STUN/TURN (Voice-over-IP folks will recognize these !) would allow a GCS on a laptop (also behind a NAT) to communicate directly with the LTE-connected drone.&lt;/p&gt;
+&lt;p&gt;For the initial proof-of-concept, a simple GCS in the cloud will do. This will be the final endpoint for the &lt;a href=&quot;http://qgroundcontrol.org/mavlink/start&quot;&gt;MAVLink&lt;/a&gt; telemetry messaging. Ideally, ICE/STUN/TURN (Voice-over-IP folks will recognize these !) would allow a GCS on a laptop (also behind a NAT) to communicate directly with the LTE-connected drone.&lt;/p&gt;
 
 &lt;p&gt;Install MAVProxy on the droplet (note that only Python3 is installed by default):&lt;/p&gt;
 
@@ -83,24 +132,26 @@ make sitl&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;dronekit-sitl ~/ardupilot/ArduCopter/ArduCopter.elf&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;Forward the telemetry to the cloud GCS (port 14550) from the Odroid C0:&lt;/p&gt;
+&lt;p&gt;Connect Odroid C0 via LTE as described in Part I.&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;mavproxy.py --master tcp:127.0.0.1:5760 --out 138.68.26.39:14550&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;Forward the telemetry to the cloud GCS from the Odroid C0:&lt;/p&gt;
 
-&lt;p&gt;Start up the cloud GCS on the droplet:&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;mavproxy.py --master tcp:127.0.0.1:5760 --out &amp;lt;Droplet IP&amp;gt;:14550&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;mavproxy.py —master&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;udp:138.68.26.39:14550&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;p&gt;Start the cloud GCS on the droplet:&lt;/p&gt;
 
-&lt;p&gt;The cloud GCS should now have control of the simulated copter !&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;mavproxy.py —master&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;udp:&amp;lt;Droplet IP&amp;gt;:14550&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;The cloud GCS should now have control of the simulated copter via LTE !&lt;/p&gt;
 
 </content>
  </entry>
  
  <entry>
    <title>Drone LTE (Part I)</title>
-   <link href="http://blog.openroar.com/2016/09/03/drone-lte-part1/"/>
-   <updated>2016-09-03T00:00:00-05:00</updated>
-   <id>http://blog.openroar.com/2016/09/03/drone-lte-part1</id>
+   <link href="http://blog.openroar.com/2016/08/18/drone-lte-part1/"/>
+   <updated>2016-08-18T00:00:00-05:00</updated>
+   <id>http://blog.openroar.com/2016/08/18/drone-lte-part1</id>
    <content type="html">&lt;p&gt;This part introduces the drone and a secondary companion computer, and sets up an LTE dongle on the companion computer .&lt;/p&gt;
 
 &lt;h3 id=&quot;drone&quot;&gt;Drone&lt;/h3&gt;

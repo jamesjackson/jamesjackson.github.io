@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Drone LTE (Part III) &middot; James Jackson
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="theme-base-09">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p></p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+    
+
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2016. All rights reserved.
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">James Jackson</a>
+            <small>Random Musings</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Drone LTE (Part III)</h1>
+  <span class="post-date">03 Sep 2016</span>
+  <p>This part establishes the communication between the secondary companion computer and the drone (the final piece of the puzzle), and tests end-to-end telemetry between Solo and the cloud GCS.</p>
+
+<h3 id="dronecompanion-computer-usb-connection">Drone/Companion Computer USB Connection</h3>
+
+<p>A <a href="http://viresity.com/product/3dr-solo-accessory-breakout-board/">breakout board</a> provides a micro USB OTG interface to Solo via the <a href="https://dev.3dr.com/hardware-accessorybay.html">accessory port</a>.</p>
+
+<p>Connecting the Odroid C0 to Solo via a USB OTG cable creates a serial device (/dev/ttyACM0) on the Odroid C0, and a serial device (/dev/ttyGS0) on the Solo. By default, Solo supports login via the /dev/ttyGS0 device.</p>
+
+<p>SSH into Solo as described <a href="https://dev.3dr.com/starting-network.html">here</a>.</p>
+
+<p>Disable login via /dev/ttyGS0 on Solo by commenting out this line in /etc/inittab:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">2:2345:respawn:/sbin/getty 115200 ttyGS0 vt100</code></pre></figure>
+
+<p>and re-reading inittab:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">init q</code></pre></figure>
+
+<p>Connect Solo to the Internet as described <a href="https://dev.3dr.com/starting-utils.html">here</a>.</p>
+
+<p>Install MAVProxy on Solo:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">smart install mavproxy</code></pre></figure>
+
+<h3 id="end-to-end-testing">End-to-end Testing</h3>
+
+<p>Start the cloud GCS on the droplet:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">mavproxy.py —master<span class="o">=</span>udp:&lt;Droplet IP&gt;:14550</code></pre></figure>
+
+<p>Connect Odroid C0 via LTE as described in Part I.</p>
+
+<p>Setup Odroid C0 to forward the telemetry from Solo (/dev/ttyACM0) to the cloud GCS:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">sudo mavproxy.py --master /dev/ttyACM0 --out &lt;Droplet IP&gt;:14550</code></pre></figure>
+
+<p>Setup Solo to forward the telemetry to Odroid C0 (/dev/ttyGS0):</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">mavproxy.py --master<span class="o">=</span>udpin:0.0.0.0:14550 --out /dev/ttyGS0</code></pre></figure>
+
+<p>The cloud GCS should now have control of Solo via LTE !</p>
+
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2016/08/27/drone-lte-part2/">
+            Drone LTE (Part II)
+            <small>27 Aug 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2016/08/18/drone-lte-part1/">
+            Drone LTE (Part I)
+            <small>18 Aug 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>
