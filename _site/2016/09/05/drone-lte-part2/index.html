@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Drone LTE (Part II) &middot; James Jackson
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="theme-base-09">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p></p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about/">About</a>
+        
+      
+    
+      
+    
+
+    <a class="sidebar-nav-item" href="/archive/v1.0.0.zip">Download</a>
+    <a class="sidebar-nav-item" href="">GitHub project</a>
+    <span class="sidebar-nav-item">Currently v1.0.0</span>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2016. All rights reserved.
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">James Jackson</a>
+            <small>Random Musings</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Drone LTE (Part II)</h1>
+  <span class="post-date">05 Sep 2016</span>
+  <p>This part introduces a cloud-based Ground Control Station (GCS), sets up telemetry forwarding from the secondary companion computer, and tests via a simulated vehicle.</p>
+
+<h3 id="cloud-gcs">Cloud GCS</h3>
+
+<p><a href="http://qgroundcontrol.org/mavlink/mavproxy_startpage">MAVProxy</a> running on an Ubuntu 16.04 droplet on <a href="https://www.digitalocean.com/">Digital Ocean</a>.</p>
+
+<p>For the initial proof-of-concept, a simple GCS in the cloud will do. This will be the final destination of the <a href="http://qgroundcontrol.org/mavlink/start">MAVLink</a> telemetry messaging. Ideally, ICE/STUN/TURN (Voice-over-IP folks will recognize these !) would allow a GCS on a laptop (also behind a NAT) to communicate directly with the LTE-connected drone.</p>
+
+<p>Install MAVProxy on the droplet (note that only Python3 is installed by default):</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">sudo apt-get update
+sudo apt-get install python2.7 python-dev python-opencv python-wxgtk3.0 python-pip python-matplotlib python-pygame python-lxml
+sudo -H pip install MAVProxy</code></pre></figure>
+
+<h3 id="telemetry-forwarding-secondary-companion-computer">Telemetry Forwarding (Secondary Companion Computer)</h3>
+
+<p><a href="http://qgroundcontrol.org/mavlink/mavproxy_startpage">MAVProxy</a> also supports forwarding of <a href="http://qgroundcontrol.org/mavlink/start">MAVLink</a> telemetry.</p>
+
+<p>Install MAVProxy on Odroid C0:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">sudo apt-get update
+sudo apt-get install python-dev python-opencv python-wxgtk3.0 python-pip python-matplotlib python-pygame python-lxml
+sudo -H pip install MAVProxy</code></pre></figure>
+
+<h3 id="testing-via-simulation">Testing via Simulation</h3>
+
+<p>Install <a href="http://python.dronekit.io/">DroneKit-Python</a> and <a href="http://python.dronekit.io/develop/sitl_setup.html">DroneKit-SITL</a> on Odroid C0:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">sudo -H pip install dronekit
+sudo -H pip install dronekit-sitl</code></pre></figure>
+
+<p>The copter simulation would normally start but…</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">odroid@odroid:~$ </span>dronekit-sitl copter
+os: linux, apm: copter, release: stable
+SITL already Downloaded and Extracted.
+Ready to boot.
+Execute: /home/odroid/.dronekit/sitl/copter-3.3/apm --home<span class="o">=</span>-35.363261,149.165230,584,353 --model<span class="o">=</span>quad
+Traceback <span class="o">(</span>most recent call last<span class="o">)</span>:
+  File <span class="s2">"/usr/local/bin/dronekit-sitl"</span>, line 11, <span class="k">in</span> &lt;module&gt;
+    sys.exit<span class="o">(</span>main<span class="o">())</span>
+  File <span class="s2">"/usr/local/lib/python2.7/dist-packages/dronekit_sitl/__init__.py"</span>, line 475, <span class="k">in </span>main
+    sitl.launch<span class="o">(</span>args, <span class="nv">verbose</span><span class="o">=</span>True<span class="o">)</span>
+  File <span class="s2">"/usr/local/lib/python2.7/dist-packages/dronekit_sitl/__init__.py"</span>, line 266, <span class="k">in </span>launch
+    p <span class="o">=</span> Popen<span class="o">([</span>self.path] + args, <span class="nv">cwd</span><span class="o">=</span>wd, <span class="nv">shell</span><span class="o">=</span>sys.platform <span class="o">==</span> <span class="s1">'win32'</span>, <span class="nv">stdout</span><span class="o">=</span>PIPE, <span class="nv">stderr</span><span class="o">=</span>PIPE<span class="o">)</span>
+  File <span class="s2">"/usr/lib/python2.7/subprocess.py"</span>, line 711, <span class="k">in </span>__init__
+    errread, errwrite<span class="o">)</span>
+  File <span class="s2">"/usr/lib/python2.7/subprocess.py"</span>, line 1343, <span class="k">in </span>_execute_child
+    raise child_exception
+OSError: <span class="o">[</span>Errno 8] Exec format error</code></pre></figure>
+
+<p>The included models are not built for the ARM architecture on the Odroid C0 !</p>
+
+<p>Re-build the models:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">sudo apt-get install git
+git clone git://github.com/ArduPilot/ardupilot.git
+<span class="nb">cd </span>ardupilot/ArduCopter
+git submodule init
+git submodule update .
+make sitl</code></pre></figure>
+
+<p>Start a copter simulation on the Odroid C0 (binds to port 5760):</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">dronekit-sitl ~/ardupilot/ArduCopter/ArduCopter.elf</code></pre></figure>
+
+<p>Forward the telemetry to the cloud GCS (port 14550) from the Odroid C0:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">mavproxy.py --master tcp:127.0.0.1:5760 --out 138.68.26.39:14550</code></pre></figure>
+
+<p>Start up the cloud GCS on the droplet:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">mavproxy.py —master<span class="o">=</span>udp:138.68.26.39:14550</code></pre></figure>
+
+<p>The cloud GCS should now have control of the simulated copter !</p>
+
+
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2016/09/03/drone-lte-part1/">
+            Drone LTE (Part I)
+            <small>03 Sep 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

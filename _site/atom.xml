@@ -4,7 +4,7 @@
  <title>James Jackson</title>
  <link href="http://blog.openroar.com/atom.xml" rel="self"/>
  <link href="http://blog.openroar.com/"/>
- <updated>2016-09-05T17:51:02-05:00</updated>
+ <updated>2016-09-05T19:18:43-05:00</updated>
  <id>http://blog.openroar.com</id>
  <author>
    <name>James Jackson</name>
@@ -13,11 +13,97 @@
 
  
  <entry>
+   <title>Drone LTE (Part II)</title>
+   <link href="http://blog.openroar.com/2016/09/05/drone-lte-part2/"/>
+   <updated>2016-09-05T00:00:00-05:00</updated>
+   <id>http://blog.openroar.com/2016/09/05/drone-lte-part2</id>
+   <content type="html">&lt;p&gt;This part introduces a cloud-based Ground Control Station (GCS), sets up telemetry forwarding from the secondary companion computer, and tests via a simulated vehicle.&lt;/p&gt;
+
+&lt;h3 id=&quot;cloud-gcs&quot;&gt;Cloud GCS&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://qgroundcontrol.org/mavlink/mavproxy_startpage&quot;&gt;MAVProxy&lt;/a&gt; running on an Ubuntu 16.04 droplet on &lt;a href=&quot;https://www.digitalocean.com/&quot;&gt;Digital Ocean&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;For the initial proof-of-concept, a simple GCS in the cloud will do. This will be the final destination of the &lt;a href=&quot;http://qgroundcontrol.org/mavlink/start&quot;&gt;MAVLink&lt;/a&gt; telemetry messaging. Ideally, ICE/STUN/TURN (Voice-over-IP folks will recognize these !) would allow a GCS on a laptop (also behind a NAT) to communicate directly with the LTE-connected drone.&lt;/p&gt;
+
+&lt;p&gt;Install MAVProxy on the droplet (note that only Python3 is installed by default):&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;sudo apt-get update
+sudo apt-get install python2.7 python-dev python-opencv python-wxgtk3.0 python-pip python-matplotlib python-pygame python-lxml
+sudo -H pip install MAVProxy&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;telemetry-forwarding-secondary-companion-computer&quot;&gt;Telemetry Forwarding (Secondary Companion Computer)&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://qgroundcontrol.org/mavlink/mavproxy_startpage&quot;&gt;MAVProxy&lt;/a&gt; also supports forwarding of &lt;a href=&quot;http://qgroundcontrol.org/mavlink/start&quot;&gt;MAVLink&lt;/a&gt; telemetry.&lt;/p&gt;
+
+&lt;p&gt;Install MAVProxy on Odroid C0:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;sudo apt-get update
+sudo apt-get install python-dev python-opencv python-wxgtk3.0 python-pip python-matplotlib python-pygame python-lxml
+sudo -H pip install MAVProxy&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;testing-via-simulation&quot;&gt;Testing via Simulation&lt;/h3&gt;
+
+&lt;p&gt;Install &lt;a href=&quot;http://python.dronekit.io/&quot;&gt;DroneKit-Python&lt;/a&gt; and &lt;a href=&quot;http://python.dronekit.io/develop/sitl_setup.html&quot;&gt;DroneKit-SITL&lt;/a&gt; on Odroid C0:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;sudo -H pip install dronekit
+sudo -H pip install dronekit-sitl&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;The copter simulation would normally start but…&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;odroid@odroid:~$ &lt;/span&gt;dronekit-sitl copter
+os: linux, apm: copter, release: stable
+SITL already Downloaded and Extracted.
+Ready to boot.
+Execute: /home/odroid/.dronekit/sitl/copter-3.3/apm --home&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;-35.363261,149.165230,584,353 --model&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;quad
+Traceback &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;most recent call last&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+  File &lt;span class=&quot;s2&quot;&gt;&quot;/usr/local/bin/dronekit-sitl&quot;&lt;/span&gt;, line 11, &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &amp;lt;module&amp;gt;
+    sys.exit&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;main&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt;
+  File &lt;span class=&quot;s2&quot;&gt;&quot;/usr/local/lib/python2.7/dist-packages/dronekit_sitl/__init__.py&quot;&lt;/span&gt;, line 475, &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;main
+    sitl.launch&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;args, &lt;span class=&quot;nv&quot;&gt;verbose&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;True&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  File &lt;span class=&quot;s2&quot;&gt;&quot;/usr/local/lib/python2.7/dist-packages/dronekit_sitl/__init__.py&quot;&lt;/span&gt;, line 266, &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;launch
+    p &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; Popen&lt;span class=&quot;o&quot;&gt;([&lt;/span&gt;self.path] + args, &lt;span class=&quot;nv&quot;&gt;cwd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;wd, &lt;span class=&quot;nv&quot;&gt;shell&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;sys.platform &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'win32'&lt;/span&gt;, &lt;span class=&quot;nv&quot;&gt;stdout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;PIPE, &lt;span class=&quot;nv&quot;&gt;stderr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;PIPE&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  File &lt;span class=&quot;s2&quot;&gt;&quot;/usr/lib/python2.7/subprocess.py&quot;&lt;/span&gt;, line 711, &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;__init__
+    errread, errwrite&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  File &lt;span class=&quot;s2&quot;&gt;&quot;/usr/lib/python2.7/subprocess.py&quot;&lt;/span&gt;, line 1343, &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;_execute_child
+    raise child_exception
+OSError: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;Errno 8] Exec format error&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;The included models are not built for the ARM architecture on the Odroid C0 !&lt;/p&gt;
+
+&lt;p&gt;Re-build the models:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;sudo apt-get install git
+git clone git://github.com/ArduPilot/ardupilot.git
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;ardupilot/ArduCopter
+git submodule init
+git submodule update .
+make sitl&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Start a copter simulation on the Odroid C0 (binds to port 5760):&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;dronekit-sitl ~/ardupilot/ArduCopter/ArduCopter.elf&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Forward the telemetry to the cloud GCS (port 14550) from the Odroid C0:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;mavproxy.py --master tcp:127.0.0.1:5760 --out 138.68.26.39:14550&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Start up the cloud GCS on the droplet:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;mavproxy.py —master&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;udp:138.68.26.39:14550&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;The cloud GCS should now have control of the simulated copter !&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
    <title>Drone LTE (Part I)</title>
    <link href="http://blog.openroar.com/2016/09/03/drone-lte-part1/"/>
    <updated>2016-09-03T00:00:00-05:00</updated>
    <id>http://blog.openroar.com/2016/09/03/drone-lte-part1</id>
-   <content type="html">&lt;h3 id=&quot;drone&quot;&gt;Drone&lt;/h3&gt;
+   <content type="html">&lt;p&gt;This part introduces the drone and a secondary companion computer, and sets up an LTE dongle on the companion computer .&lt;/p&gt;
+
+&lt;h3 id=&quot;drone&quot;&gt;Drone&lt;/h3&gt;
 &lt;p&gt;&lt;a href=&quot;https://3dr.com/solo-drone/specs/&quot;&gt;3DR Solo&lt;/a&gt; w/Gimbal and GoPro HERO4 camera&lt;/p&gt;
 
 &lt;p&gt;The &lt;a href=&quot;https://dev.3dr.com/concept-architecture.html&quot;&gt;Solo architecture&lt;/a&gt; shows the primary companion computer (iMX.6) that runs Yocto Linux. The &lt;a href=&quot;https://dev.3dr.com/hardware-accessorybay.html&quot;&gt;accessory port&lt;/a&gt; provides USB access to the iMX.6 via a breakout board, but the kernel only includes support for USB serial devices (FTDI and CDC-ACM). Adding a secondary companion computer provides some additional flexibility, and reduces the chances of bricking the primary.&lt;/p&gt;

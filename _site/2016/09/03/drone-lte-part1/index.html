@@ -95,7 +95,9 @@
         <div class="post">
   <h1 class="post-title">Drone LTE (Part I)</h1>
   <span class="post-date">03 Sep 2016</span>
-  <h3 id="drone">Drone</h3>
+  <p>This part introduces the drone and a secondary companion computer, and sets up an LTE dongle on the companion computer .</p>
+
+<h3 id="drone">Drone</h3>
 <p><a href="https://3dr.com/solo-drone/specs/">3DR Solo</a> w/Gimbal and GoPro HERO4 camera</p>
 
 <p>The <a href="https://dev.3dr.com/concept-architecture.html">Solo architecture</a> shows the primary companion computer (iMX.6) that runs Yocto Linux. The <a href="https://dev.3dr.com/hardware-accessorybay.html">accessory port</a> provides USB access to the iMX.6 via a breakout board, but the kernel only includes support for USB serial devices (FTDI and CDC-ACM). Adding a secondary companion computer provides some additional flexibility, and reduces the chances of bricking the primary.</p>
@@ -260,6 +262,15 @@ rtt min/avg/max/mdev <span class="o">=</span> 66.814/167.198/318.361/78.230 ms</
 <div class="related">
   <h2>Related Posts</h2>
   <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2016/09/05/drone-lte-part2/">
+            Drone LTE (Part II)
+            <small>05 Sep 2016</small>
+          </a>
+        </h3>
+      </li>
     
   </ul>
 </div>

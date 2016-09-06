@@ -3,6 +3,8 @@ layout: post
 title: Drone LTE (Part I)
 ---
 
+This part introduces the drone and a secondary companion computer, and sets up an LTE dongle on the companion computer . 
+
 ### Drone
 [3DR Solo](https://3dr.com/solo-drone/specs/) w/Gimbal and GoPro HERO4 camera 
 
