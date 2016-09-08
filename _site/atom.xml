@@ -4,7 +4,7 @@
  <title>James Jackson</title>
  <link href="http://blog.openroar.com/atom.xml" rel="self"/>
  <link href="http://blog.openroar.com/"/>
- <updated>2016-09-07T23:16:26-05:00</updated>
+ <updated>2016-09-08T00:55:59-05:00</updated>
  <id>http://blog.openroar.com</id>
  <author>
    <name>James Jackson</name>
@@ -25,11 +25,11 @@
 
 &lt;h3 id=&quot;live-demo&quot;&gt;Live Demo&lt;/h3&gt;
 
-&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/nF5P84_qyjU&quot; frameborder=&quot;0&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
+&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/7ARJ3PadnUo&quot; frameborder=&quot;0&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
 
 &lt;h3 id=&quot;open-issues&quot;&gt;Open Issues&lt;/h3&gt;
 
-&lt;p&gt;The cloud GCS periodically loses link. Note that the MAVLink messages are using UDP. TCP would not help, as the head-of-line blocking issues would create new problems. This area requires additional investigation into the protocol behavior, and the MAVProxy implementation.&lt;/p&gt;
+&lt;p&gt;The cloud GCS periodically loses link. Note that the MAVLink messages are using UDP. TCP would not help here, as the head-of-line blocking issues would create new problems. This area requires additional investigation into the protocol behavior, and the MAVProxy implementation.&lt;/p&gt;
 
 &lt;h3 id=&quot;next-steps&quot;&gt;Next Steps&lt;/h3&gt;
 

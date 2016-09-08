@@ -11,11 +11,11 @@ This part provides a demonstration of the LTE-connected drone.
 
 ### Live Demo
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/nF5P84_qyjU" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/7ARJ3PadnUo" frameborder="0" allowfullscreen></iframe>
 
 ### Open Issues
 
-The cloud GCS periodically loses link. Note that the MAVLink messages are using UDP. TCP would not help, as the head-of-line blocking issues would create new problems. This area requires additional investigation into the protocol behavior, and the MAVProxy implementation.
+The cloud GCS periodically loses link. Note that the MAVLink messages are using UDP. TCP would not help here, as the head-of-line blocking issues would create new problems. This area requires additional investigation into the protocol behavior, and the MAVProxy implementation.
 
 ### Next Steps
 
