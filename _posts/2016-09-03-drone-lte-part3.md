@@ -45,7 +45,7 @@ sudo mavproxy.py --master /dev/ttyACM0 --out <Droplet IP>:14550
 
 Setup Solo to forward the telemetry to Odroid C0 (/dev/ttyGS0):
 {% highlight bash %}
-mavproxy.py --master=udpin:0.0.0.0:14550 --out /dev/ttyGS0
+mavproxy.py --master=127.0.0.1:14550 --out /dev/ttyGS0
 {% endhighlight %}
 
 The cloud GCS should now have control of Solo via LTE !

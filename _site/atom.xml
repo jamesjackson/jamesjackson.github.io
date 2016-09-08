@@ -4,13 +4,43 @@
  <title>James Jackson</title>
  <link href="http://blog.openroar.com/atom.xml" rel="self"/>
  <link href="http://blog.openroar.com/"/>
- <updated>2016-09-06T09:29:33-05:00</updated>
+ <updated>2016-09-07T23:16:26-05:00</updated>
  <id>http://blog.openroar.com</id>
  <author>
    <name>James Jackson</name>
    <email>fiberhog@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>Drone LTE (Part IV)</title>
+   <link href="http://blog.openroar.com/2016/09/07/drone-lte-part4/"/>
+   <updated>2016-09-07T00:00:00-05:00</updated>
+   <id>http://blog.openroar.com/2016/09/07/drone-lte-part4</id>
+   <content type="html">&lt;p&gt;This part provides a demonstration of the LTE-connected drone.&lt;/p&gt;
+
+&lt;h3 id=&quot;final-setup&quot;&gt;Final Setup&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/ltedrone.jpg&quot; alt=&quot;3DR Solo with LTE telemetry&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;live-demo&quot;&gt;Live Demo&lt;/h3&gt;
+
+&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/nF5P84_qyjU&quot; frameborder=&quot;0&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
+
+&lt;h3 id=&quot;open-issues&quot;&gt;Open Issues&lt;/h3&gt;
+
+&lt;p&gt;The cloud GCS periodically loses link. Note that the MAVLink messages are using UDP. TCP would not help, as the head-of-line blocking issues would create new problems. This area requires additional investigation into the protocol behavior, and the MAVProxy implementation.&lt;/p&gt;
+
+&lt;h3 id=&quot;next-steps&quot;&gt;Next Steps&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Investigate link drop issues&lt;/li&gt;
+  &lt;li&gt;Characterize LTE communication during flight&lt;/li&gt;
+  &lt;li&gt;Stream video over LTE&lt;/li&gt;
+  &lt;li&gt;Investigate ICE/STUN/TURN options for MAVLink messaging via NATs&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Drone LTE (Part III)</title>
@@ -55,7 +85,7 @@
 
 &lt;p&gt;Setup Solo to forward the telemetry to Odroid C0 (/dev/ttyGS0):&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;mavproxy.py --master&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;udpin:0.0.0.0:14550 --out /dev/ttyGS0&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;mavproxy.py --master&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;127.0.0.1:14550 --out /dev/ttyGS0&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;The cloud GCS should now have control of Solo via LTE !&lt;/p&gt;
 </content>

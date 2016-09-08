@@ -11,7 +11,7 @@
 
   <title>
     
-      Drone LTE (Part III) &middot; James Jackson
+      Drone LTE (Part IV) &middot; James Jackson
     
   </title>
 
@@ -90,49 +90,30 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Drone LTE (Part III)</h1>
-  <span class="post-date">03 Sep 2016</span>
-  <p>This part establishes the communication between the secondary companion computer and the drone (the final piece of the puzzle), and tests end-to-end telemetry between Solo and the cloud GCS.</p>
+  <h1 class="post-title">Drone LTE (Part IV)</h1>
+  <span class="post-date">07 Sep 2016</span>
+  <p>This part provides a demonstration of the LTE-connected drone.</p>
 
-<h3 id="dronecompanion-computer-usb-connection">Drone/Companion Computer USB Connection</h3>
+<h3 id="final-setup">Final Setup</h3>
 
-<p>A <a href="http://viresity.com/product/3dr-solo-accessory-breakout-board/">breakout board</a> provides a micro USB OTG interface to Solo via the <a href="https://dev.3dr.com/hardware-accessorybay.html">accessory port</a>.</p>
+<p><img src="/images/ltedrone.jpg" alt="3DR Solo with LTE telemetry" /></p>
 
-<p>Connecting the Odroid C0 to Solo via a USB OTG cable creates a serial device (/dev/ttyACM0) on the Odroid C0, and a serial device (/dev/ttyGS0) on the Solo. By default, Solo supports login via the /dev/ttyGS0 device.</p>
+<h3 id="live-demo">Live Demo</h3>
 
-<p>SSH into Solo as described <a href="https://dev.3dr.com/starting-network.html">here</a>.</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/nF5P84_qyjU" frameborder="0" allowfullscreen=""></iframe>
 
-<p>Disable login via /dev/ttyGS0 on Solo by commenting out this line in /etc/inittab:</p>
+<h3 id="open-issues">Open Issues</h3>
 
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash">2:2345:respawn:/sbin/getty 115200 ttyGS0 vt100</code></pre></figure>
+<p>The cloud GCS periodically loses link. Note that the MAVLink messages are using UDP. TCP would not help, as the head-of-line blocking issues would create new problems. This area requires additional investigation into the protocol behavior, and the MAVProxy implementation.</p>
 
-<p>and re-reading inittab:</p>
+<h3 id="next-steps">Next Steps</h3>
 
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash">init q</code></pre></figure>
-
-<p>Connect Solo to the Internet as described <a href="https://dev.3dr.com/starting-utils.html">here</a>.</p>
-
-<p>Install MAVProxy on Solo:</p>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash">smart install mavproxy</code></pre></figure>
-
-<h3 id="end-to-end-testing">End-to-end Testing</h3>
-
-<p>Start the cloud GCS on the droplet:</p>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash">mavproxy.py —master<span class="o">=</span>udp:&lt;Droplet IP&gt;:14550</code></pre></figure>
-
-<p>Connect Odroid C0 via LTE as described in Part I.</p>
-
-<p>Setup Odroid C0 to forward the telemetry from Solo (/dev/ttyACM0) to the cloud GCS:</p>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash">sudo mavproxy.py --master /dev/ttyACM0 --out &lt;Droplet IP&gt;:14550</code></pre></figure>
-
-<p>Setup Solo to forward the telemetry to Odroid C0 (/dev/ttyGS0):</p>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash">mavproxy.py --master<span class="o">=</span>127.0.0.1:14550 --out /dev/ttyGS0</code></pre></figure>
-
-<p>The cloud GCS should now have control of Solo via LTE !</p>
+<ul>
+  <li>Investigate link drop issues</li>
+  <li>Characterize LTE communication during flight</li>
+  <li>Stream video over LTE</li>
+  <li>Investigate ICE/STUN/TURN options for MAVLink messaging via NATs</li>
+</ul>
 
 </div>
 
@@ -142,9 +123,9 @@
     
       <li>
         <h3>
-          <a href="/2016/09/07/drone-lte-part4/">
-            Drone LTE (Part IV)
-            <small>07 Sep 2016</small>
+          <a href="/2016/09/03/drone-lte-part3/">
+            Drone LTE (Part III)
+            <small>03 Sep 2016</small>
           </a>
         </h3>
       </li>
