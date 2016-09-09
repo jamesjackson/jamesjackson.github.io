@@ -1,3 +1,4 @@
+
 # Permalinks
 #
 # Use of `relative_permalinks` ensures post links from the index work properly.
@@ -12,14 +13,16 @@ url:                 http://blog.openroar.com
 baseurl:             ''
 paginate:            5
 
+
 # About/contact
 author:
   name:              James Jackson
   url:               
   email:             fiberhog@gmail.com
-  disqus_shortname: jamesjacksonblog
 
 # Custom vars
 version:             1.0.0
+
+disqus_shortname: jamesjacksonblog
 
 gems: [jekyll-paginate]
