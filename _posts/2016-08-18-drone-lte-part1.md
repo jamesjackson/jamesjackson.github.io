@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Drone LTE (Part I)
+comments: true
 ---
 
 This part introduces the drone and a secondary companion computer, and sets up an LTE dongle on the companion computer . 
