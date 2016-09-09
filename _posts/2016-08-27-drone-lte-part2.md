@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Drone LTE (Part II)
+comments: true
 ---
 
 This part introduces a cloud-based Ground Control Station (GCS), sets up telemetry forwarding from the secondary companion computer, and tests via a simulated vehicle.

@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Drone LTE (Part IV)
+comments: true
 ---
 
 This part provides a demonstration of the LTE-connected drone.

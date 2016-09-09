@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Drone LTE (Part III)
+comments: true
 ---
 
 This part establishes the communication between the secondary companion computer and the drone (the final piece of the puzzle), and tests end-to-end telemetry between Solo and the cloud GCS.
