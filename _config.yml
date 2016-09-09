@@ -17,6 +17,7 @@ author:
   name:              James Jackson
   url:               
   email:             fiberhog@gmail.com
+  disqus_shortname: jamesjackson
 
 # Custom vars
 version:             1.0.0
