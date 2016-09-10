@@ -16,7 +16,7 @@ This part provides a demonstration of the LTE-connected drone.
 
 ### Open Issues
 
-The cloud GCS periodically loses link. Note that the MAVLink messages are using UDP. TCP would not help here, as the head-of-line blocking issues would create new problems. This area requires additional investigation into the protocol behavior, and the MAVProxy implementation.
+The Cloud Control Station (CCS) periodically loses link (MAVLink messaging level). Note that the MAVLink messages are using UDP. TCP would not help here, as the head-of-line blocking issues would create new problems. This area requires additional investigation into the protocol behavior, and the MAVProxy implementation.
 
 ### Next Steps
 

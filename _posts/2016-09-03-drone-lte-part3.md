@@ -4,7 +4,7 @@ title: Drone LTE (Part III)
 comments: true
 ---
 
-This part establishes the communication between the secondary companion computer and the drone (the final piece of the puzzle), and tests end-to-end telemetry between Solo and the cloud GCS.
+This part establishes the communication between the secondary companion computer and the drone (the final piece of the puzzle), and tests end-to-end telemetry between Solo and the Cloud Control Station (CCS).
 
 ### Drone/Companion Computer USB Connection
 
@@ -32,14 +32,14 @@ smart install mavproxy
 
 ### End-to-end Testing
 
-Start the cloud GCS on the droplet:
+Start the CCS on the droplet:
 {% highlight bash %}
 mavproxy.py —master=udp:<Droplet IP>:14550
 {% endhighlight %}
 
 Connect Odroid C0 via LTE as described in Part I.
 
-Setup Odroid C0 to forward the telemetry from Solo (/dev/ttyACM0) to the cloud GCS:
+Setup Odroid C0 to forward the telemetry from Solo (/dev/ttyACM0) to the CCS:
 {% highlight bash %}
 sudo mavproxy.py --master /dev/ttyACM0 --out <Droplet IP>:14550
 {% endhighlight %}
@@ -49,4 +49,4 @@ Setup Solo to forward the telemetry to Odroid C0 (/dev/ttyGS0):
 mavproxy.py --master=127.0.0.1:14550 --out /dev/ttyGS0
 {% endhighlight %}
 
-The cloud GCS should now have control of Solo via LTE !
+The CCS should now have control of Solo via LTE !

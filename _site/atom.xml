@@ -4,7 +4,7 @@
  <title>James Jackson</title>
  <link href="http://blog.openroar.com/atom.xml" rel="self"/>
  <link href="http://blog.openroar.com/"/>
- <updated>2016-09-08T21:37:06-05:00</updated>
+ <updated>2016-09-09T23:36:54-05:00</updated>
  <id>http://blog.openroar.com</id>
  <author>
    <name>James Jackson</name>
@@ -29,7 +29,7 @@
 
 &lt;h3 id=&quot;open-issues&quot;&gt;Open Issues&lt;/h3&gt;
 
-&lt;p&gt;The cloud GCS periodically loses link. Note that the MAVLink messages are using UDP. TCP would not help here, as the head-of-line blocking issues would create new problems. This area requires additional investigation into the protocol behavior, and the MAVProxy implementation.&lt;/p&gt;
+&lt;p&gt;The Cloud Control Station (CCS) periodically loses link (MAVLink messaging level). Note that the MAVLink messages are using UDP. TCP would not help here, as the head-of-line blocking issues would create new problems. This area requires additional investigation into the protocol behavior, and the MAVProxy implementation.&lt;/p&gt;
 
 &lt;h3 id=&quot;next-steps&quot;&gt;Next Steps&lt;/h3&gt;
 
@@ -47,7 +47,7 @@
    <link href="http://blog.openroar.com/2016/09/03/drone-lte-part3/"/>
    <updated>2016-09-03T00:00:00-05:00</updated>
    <id>http://blog.openroar.com/2016/09/03/drone-lte-part3</id>
-   <content type="html">&lt;p&gt;This part establishes the communication between the secondary companion computer and the drone (the final piece of the puzzle), and tests end-to-end telemetry between Solo and the cloud GCS.&lt;/p&gt;
+   <content type="html">&lt;p&gt;This part establishes the communication between the secondary companion computer and the drone (the final piece of the puzzle), and tests end-to-end telemetry between Solo and the Cloud Control Station (CCS).&lt;/p&gt;
 
 &lt;h3 id=&quot;dronecompanion-computer-usb-connection&quot;&gt;Drone/Companion Computer USB Connection&lt;/h3&gt;
 
@@ -73,13 +73,13 @@
 
 &lt;h3 id=&quot;end-to-end-testing&quot;&gt;End-to-end Testing&lt;/h3&gt;
 
-&lt;p&gt;Start the cloud GCS on the droplet:&lt;/p&gt;
+&lt;p&gt;Start the CCS on the droplet:&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;mavproxy.py —master&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;udp:&amp;lt;Droplet IP&amp;gt;:14550&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Connect Odroid C0 via LTE as described in Part I.&lt;/p&gt;
 
-&lt;p&gt;Setup Odroid C0 to forward the telemetry from Solo (/dev/ttyACM0) to the cloud GCS:&lt;/p&gt;
+&lt;p&gt;Setup Odroid C0 to forward the telemetry from Solo (/dev/ttyACM0) to the CCS:&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;sudo mavproxy.py --master /dev/ttyACM0 --out &amp;lt;Droplet IP&amp;gt;:14550&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
@@ -87,7 +87,7 @@
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;mavproxy.py --master&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;127.0.0.1:14550 --out /dev/ttyGS0&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;The cloud GCS should now have control of Solo via LTE !&lt;/p&gt;
+&lt;p&gt;The CCS should now have control of Solo via LTE !&lt;/p&gt;
 </content>
  </entry>
  
@@ -96,13 +96,13 @@
    <link href="http://blog.openroar.com/2016/08/27/drone-lte-part2/"/>
    <updated>2016-08-27T00:00:00-05:00</updated>
    <id>http://blog.openroar.com/2016/08/27/drone-lte-part2</id>
-   <content type="html">&lt;p&gt;This part introduces a cloud-based Ground Control Station (GCS), sets up telemetry forwarding from the secondary companion computer, and tests via a simulated vehicle.&lt;/p&gt;
+   <content type="html">&lt;p&gt;This part introduces a Cloud Control Station (CCS), sets up telemetry forwarding from the secondary companion computer, and tests via a simulated vehicle.&lt;/p&gt;
 
-&lt;h3 id=&quot;cloud-gcs&quot;&gt;Cloud GCS&lt;/h3&gt;
+&lt;h3 id=&quot;cloud-control-station&quot;&gt;Cloud Control Station&lt;/h3&gt;
 
 &lt;p&gt;&lt;a href=&quot;http://qgroundcontrol.org/mavlink/mavproxy_startpage&quot;&gt;MAVProxy&lt;/a&gt; running on an Ubuntu 16.04 droplet on &lt;a href=&quot;https://www.digitalocean.com/&quot;&gt;Digital Ocean&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;For the initial proof-of-concept, a simple GCS in the cloud will do. This will be the final endpoint for the &lt;a href=&quot;http://qgroundcontrol.org/mavlink/start&quot;&gt;MAVLink&lt;/a&gt; telemetry messaging. Ideally, ICE/STUN/TURN (Voice-over-IP folks will recognize these !) would allow a GCS on a laptop (also behind a NAT) to communicate directly with the LTE-connected drone.&lt;/p&gt;
+&lt;p&gt;The CCS will be the final endpoint for the &lt;a href=&quot;http://qgroundcontrol.org/mavlink/start&quot;&gt;MAVLink&lt;/a&gt; telemetry messaging. Ideally, ICE/STUN/TURN (Voice-over-IP folks will recognize these !) would allow a Ground Control Station (GCS) on a laptop (also behind a NAT) to communicate with the LTE-connected drone.&lt;/p&gt;
 
 &lt;p&gt;Install MAVProxy on the droplet (note that only Python3 is installed by default):&lt;/p&gt;
 
@@ -164,15 +164,15 @@ make sitl&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Connect Odroid C0 via LTE as described in Part I.&lt;/p&gt;
 
-&lt;p&gt;Forward the telemetry to the cloud GCS from the Odroid C0:&lt;/p&gt;
+&lt;p&gt;Forward the telemetry to the CCS from the Odroid C0:&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;mavproxy.py --master tcp:127.0.0.1:5760 --out &amp;lt;Droplet IP&amp;gt;:14550&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;Start the cloud GCS on the droplet:&lt;/p&gt;
+&lt;p&gt;Start the CCS on the droplet:&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;mavproxy.py —master&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;udp:&amp;lt;Droplet IP&amp;gt;:14550&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;The cloud GCS should now have control of the simulated copter via LTE !&lt;/p&gt;
+&lt;p&gt;The CCS should now have control of the simulated copter via LTE !&lt;/p&gt;
 
 </content>
  </entry>

@@ -94,7 +94,7 @@
     <h1 itemprop="name" class="post-title">Drone LTE (Part III)</h1>
     <p class="entry-tags"></p>
     <p class="post-date" itemprop="datePublished" content="2016-09-03">03 Sep 2016</p>
-    <p>This part establishes the communication between the secondary companion computer and the drone (the final piece of the puzzle), and tests end-to-end telemetry between Solo and the cloud GCS.</p>
+    <p>This part establishes the communication between the secondary companion computer and the drone (the final piece of the puzzle), and tests end-to-end telemetry between Solo and the Cloud Control Station (CCS).</p>
 
 <h3 id="dronecompanion-computer-usb-connection">Drone/Companion Computer USB Connection</h3>
 
@@ -120,13 +120,13 @@
 
 <h3 id="end-to-end-testing">End-to-end Testing</h3>
 
-<p>Start the cloud GCS on the droplet:</p>
+<p>Start the CCS on the droplet:</p>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash">mavproxy.py —master<span class="o">=</span>udp:&lt;Droplet IP&gt;:14550</code></pre></figure>
 
 <p>Connect Odroid C0 via LTE as described in Part I.</p>
 
-<p>Setup Odroid C0 to forward the telemetry from Solo (/dev/ttyACM0) to the cloud GCS:</p>
+<p>Setup Odroid C0 to forward the telemetry from Solo (/dev/ttyACM0) to the CCS:</p>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash">sudo mavproxy.py --master /dev/ttyACM0 --out &lt;Droplet IP&gt;:14550</code></pre></figure>
 
@@ -134,7 +134,7 @@
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash">mavproxy.py --master<span class="o">=</span>127.0.0.1:14550 --out /dev/ttyGS0</code></pre></figure>
 
-<p>The cloud GCS should now have control of Solo via LTE !</p>
+<p>The CCS should now have control of Solo via LTE !</p>
 
     <div id="disqus_thread"></div>
   </div>
