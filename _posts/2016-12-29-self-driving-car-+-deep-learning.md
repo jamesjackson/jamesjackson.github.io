@@ -4,11 +4,11 @@ This project, part of the [Udacity Self-Driving Car Engineer](https://www.udacit
 
 **The Data**
 
-As a first attempt, custom training data is collected by using a PS3 controller to drive Track 1 multiple times in each direction. Only center images are used for training, and good driving data is supplemented with corrective driving, veering back to center after approaching/crossing the left/right lane markings. While this approach eventually allows the car to complete a full lap autonomously, it relies on collecting extensive (and potentially track-specific) corrective driving data, which would not be possible in a real-world scenario. With the release of Udacity training data, the code is refactored to use the left/right images instead of corrective driving. This aligns well with the real-world approach taken by Nvidia in [End to End Learning for Self-Driving Cars](https://arxiv.org/pdf/1604.07316v1.pdf) . It also provides a result that generalizes well to other driving environments.
+As a first attempt, custom training data is collected by using a PS3 controller to drive Track 1 multiple times in each direction. Only center images are used for training, and good driving data is supplemented with corrective driving, veering back to center after approaching/crossing the left/right lane markings. While this approach eventually allows the car to complete a full lap autonomously, it relies on collecting extensive (and potentially track-specific) corrective driving data, which would not be possible in a real-world scenario. With the release of the Udacity training data, the code is refactored to use the left/right images instead of corrective driving. This aligns well with the real-world approach taken by Nvidia in [End to End Learning for Self-Driving Cars](https://arxiv.org/pdf/1604.07316v1.pdf) . It also provides a result that generalizes well to other driving environments.
 
 **Data Augmentation**
 
-Recorded driving data contains substantial noise. Also, there is a large variation in throttle and speed at various instances. Smoothing steering angles (ex. [SciPy Butterworth filter](https://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.signal.butter.html)), and normalizing steering angles based on throttle/speed, are both investigated. However, it is difficult to gauge the resulting effect on the model. A potential enhancement to the simulator might support direct playback of recorded data, allowing filtering and normalization to be evaluated independently of the model. Udacity training data maintains a constant throttle, which alleviates some of the noise.
+Recorded driving data contains substantial noise. Also, there is a large variation in throttle and speed at various instances. Smoothing steering angles (ex. [SciPy Butterworth filter](https://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.signal.butter.html)), and normalizing steering angles based on throttle/speed, are both investigated. However, it is difficult to gauge the resulting effect on the model. A potential enhancement to the simulator might allow direct playback of recorded data, such that filtering and normalization may be evaluated independently of the model. The Udacity training data maintains a constant throttle, which alleviates some of the noise.
 
 A constant 0.25 (6.25 deg.) is added to left camera image steering angles, and substracted from right camera image steering angles. This forces aggressive right turns when drifting to the left of the lane, and vice-versa. Variable steering adjustment based on the current steering angle is an area for future investigation.
 
@@ -116,11 +116,13 @@ Video of real-time simulation running on Track 1:
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/o9ICVTnC1Uo" frameborder="0" allowfullscreen></iframe>
 
+
 With minimal tuning of the driving control (additional throttle and a constant increase in predicted steering angles) the model is able to generalize and drive on a completely new track.
 
 Video of real-time simulation running on Track 2:
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/A8iNpQzG-Qw" frameborder="0" allowfullscreen></iframe>
+
 
 The project provides great insight into some of the challenges involved in training a deep learning model to control a self-driving car. It demonstrates the critical importance of the collected data (quantity, quality, distribution etc.) and the associated pre-processing/augmentation. It also emphasizes the role of empirical testing in deep learning.
 
