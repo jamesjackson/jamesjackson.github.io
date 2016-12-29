@@ -1,3 +1,9 @@
+---
+layout: post
+title: Training a self-driving car via deep learning
+comments: true
+---
+
 **Intro**
 
 This project, part of the [Udacity Self-Driving Car Engineer](https://www.udacity.com/course/self-driving-car-engineer-nanodegree--nd013) program, seeks to train the steering angle of a self-driving car via deep learning. The car is equipped with 3 video cameras (left, center, right), and the simulator provides a training mode, and an autonomous driving mode. The training mode logs driving data (images, steering angle, throttle, brake, speed) at 10Hz. The autonomous mode loads the developed model architecture and weights, feeds images to the model in real-time at 50Hz, and performs control based on the returned steering angle and the specified throttle.
