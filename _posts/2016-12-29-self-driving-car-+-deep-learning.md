@@ -26,11 +26,17 @@ A sample set of pre-augmented images is shown below:
 
 The corresponding post-augmented images are shown below:
 
-![left, 64x64, steering: 0.379](/images/final_left.jpg) ![left flipped, 64x64, steering: -0.379](/images/final_left_flip.jpg)
+![left, 64x64, steering: 0.379](/images/final_left.jpg)
 
-![center, 64x64, steering: 0.129](/images/final_center.jpg) ![center flipped, 64x64, steering: -0.129](/images/final_center_flip.jpg)
+![left flipped, 64x64, steering: -0.379](/images/final_left_flip.jpg)
 
-![right, 64x64, steering: -0.121](/images/final_right.jpg) ![right flipped, 64x64, steering: 0.121](/images/final_right_flip.jpg)
+![center, 64x64, steering: 0.129](/images/final_center.jpg)
+
+![center flipped, 64x64, steering: -0.129](/images/final_center_flip.jpg)
+
+![right, 64x64, steering: -0.121](/images/final_right.jpg)
+
+![right flipped, 64x64, steering: 0.121](/images/final_right_flip.jpg)
 
 **Data Pipeline**
 
@@ -44,7 +50,7 @@ Custom training and validation generators parse the CSV files and serve up batch
 
 The model uses a Convolutional Neural Network (CNN) in Tensorflow/Keras, and is based on the [comma.ai](https://github.com/commaai/research) train steering model. The model summary is shown below. The input layer takes a 64x64x3 (RGB) image and normalizes the values between -1 and 1 via a lambda funtion. There are 3 convolutional layers using 16 filters of size 8x8, 32 filters of size 5x5, and finally 64 filters of size 5x5. The  convolutional layers are separated by activation layers, specificially Exponential Linear Units (ELUs). The inputs are subsequently flattened, and a dropout (0.2) is applied before switching to the first fully connected layer. A second dropout (0.5) is applied before the final fully connected layer of 513 parameters. The dropouts create a robust network that is more resilient to overfitting. The model uses 592,497 parameters in total. Visualizing the convolutional filters, as shown in this [Keras blog](https://blog.keras.io/how-convolutional-neural-networks-see-the-world.html), is an area for future investigation.
 
-![Model Summary](/images/model_summary.tiff)
+![Model Summary](/images/model_summary.jpg)
 
 **Training**
 
@@ -97,15 +103,22 @@ Epoch 8/8
 
 Applying each set of model weights to the simulator demonstrates that the 5th epoch (which has the lowest validation MSE) actually provides the best driving response. The driving is wavy in nature, which indicates that the core steering angle predictions are far from perfect (to be expected given only a few laps of training data), but this is counteracted by the aggressive avoidance of side lane markers. 
 
-[Video](https://youtu.be/o9ICVTnC1Uo) of real-time simulation running on Track 1.
+Video of real-time simulation running on Track 1:
+
+<iframe width="560" height="315" src="https://youtu.be/o9ICVTnC1Uo" frameborder="0" allowfullscreen></iframe>
 
 With minimal tuning of the driving control (additional throttle and a constant increase in predicted steering angles) the model is able to generalize and drive on a completely new track.
 
-[Video](https://youtu.be/A8iNpQzG-Qw) of real-time simulation running on Track 2.
+Video of real-time simulation running on Track 2:
+
+<iframe width="560" height="315" src="https://youtu.be/A8iNpQzG-Qw" frameborder="0" allowfullscreen></iframe>
 
 The project provides great insight into some of the challenges involved in training a deep learning model to control a self-driving car. It demonstrates the critical importance of the collected data (quantity, quality, distribution etc.) and the associated pre-processing/augmentation. It also emphasizes the role of empirical testing in deep learning.
 
-Nvidia has [shown](https://www.youtube.com/watch?v=-96BEoXJMs0) that a very similar approach can provide robust real-world results.
+Nvidia has shown that a very similar approach can provide robust real-world results:
+
+<iframe width="560" height="315" src="https://www.youtube.com/watch?v=-96BEoXJMs0" frameborder="0" allowfullscreen></iframe>
+
 
 
 
