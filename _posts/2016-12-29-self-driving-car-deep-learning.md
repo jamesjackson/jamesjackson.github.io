@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Training a self-driving car via deep learning
+title: Training a Self-Driving Car via Deep Learning
 comments: true
 ---
 
