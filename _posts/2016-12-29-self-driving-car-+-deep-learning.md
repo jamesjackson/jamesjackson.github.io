@@ -18,24 +18,33 @@ There is room for additional image augmentation, but care must be taken to ensur
 
 A sample set of pre-augmented images is shown below:
 
-![left, 320x160, steering: 0.129](/images/left_2016_12_01_13_33_04_992.jpg)
 left, 320x160, steering: 0.129
-![center, 320x160, steering: 0.129](/images/center_2016_12_01_13_33_04_992.jpg)
+![left, 320x160, steering: 0.129](/images/left_2016_12_01_13_33_04_992.jpg)
+
 center, 320x160, steering: 0.129
+![center, 320x160, steering: 0.129](/images/center_2016_12_01_13_33_04_992.jpg)
+
+right, 320x160, steering: 0.129
 ![right, 320x160, steering: 0.129](/images/right_2016_12_01_13_33_04_992.jpg)
 
 The corresponding post-augmented images are shown below:
 
+left, 64x64, steering: 0.379
 ![left, 64x64, steering: 0.379](/images/final_left.jpg)
 
+left flipped, 64x64, steering: -0.379
 ![left flipped, 64x64, steering: -0.379](/images/final_left_flip.jpg)
 
+center, 64x64, steering: 0.129
 ![center, 64x64, steering: 0.129](/images/final_center.jpg)
 
+center flipped, 64x64, steering: -0.129
 ![center flipped, 64x64, steering: -0.129](/images/final_center_flip.jpg)
 
+right, 64x64, steering: -0.121
 ![right, 64x64, steering: -0.121](/images/final_right.jpg)
 
+right flipped, 64x64, steering: 0.121
 ![right flipped, 64x64, steering: 0.121](/images/final_right_flip.jpg)
 
 **Data Pipeline**
