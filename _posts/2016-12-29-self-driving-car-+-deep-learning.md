@@ -18,7 +18,7 @@ There is room for additional image augmentation, but care must be taken to ensur
 
 A sample set of pre-augmented images is shown below:
 
-![left, 320x160, steering: 0.129](/images/left_2016_12_01_13_33_04_992.jpg)
+![left, 320x160, steering: 0.129](/images/left_2016_12_01_13_33_04_992.jpg "test name")
 
 ![center, 320x160, steering: 0.129](/images/center_2016_12_01_13_33_04_992.jpg)
 
@@ -26,9 +26,7 @@ A sample set of pre-augmented images is shown below:
 
 The corresponding post-augmented images are shown below:
 
-![left, 64x64, steering: 0.379](/images/final_left.jpg)
-
-![left flipped, 64x64, steering: -0.379](/images/final_left_flip.jpg)
+![left, 64x64, steering: 0.379](/images/final_left.jpg "test name") ![left flipped, 64x64, steering: -0.379](/images/final_left_flip.jpg "test name")
 
 ![center, 64x64, steering: 0.129](/images/final_center.jpg)
 
@@ -105,19 +103,19 @@ Applying each set of model weights to the simulator demonstrates that the 5th ep
 
 Video of real-time simulation running on Track 1:
 
-<iframe width="560" height="315" src="https://youtu.be/o9ICVTnC1Uo" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/o9ICVTnC1Uo" frameborder="0" allowfullscreen></iframe>
 
 With minimal tuning of the driving control (additional throttle and a constant increase in predicted steering angles) the model is able to generalize and drive on a completely new track.
 
 Video of real-time simulation running on Track 2:
 
-<iframe width="560" height="315" src="https://youtu.be/A8iNpQzG-Qw" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/A8iNpQzG-Qw" frameborder="0" allowfullscreen></iframe>
 
 The project provides great insight into some of the challenges involved in training a deep learning model to control a self-driving car. It demonstrates the critical importance of the collected data (quantity, quality, distribution etc.) and the associated pre-processing/augmentation. It also emphasizes the role of empirical testing in deep learning.
 
 Nvidia has shown that a very similar approach can provide robust real-world results:
 
-<iframe width="560" height="315" src="https://www.youtube.com/watch?v=-96BEoXJMs0" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/-96BEoXJMs0" frameborder="0" allowfullscreen></iframe>
 
 
 
