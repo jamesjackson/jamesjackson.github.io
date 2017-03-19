@@ -1,16 +1,16 @@
 ---
 layout: post
-title: Performing Object Detection with a Surveillance Camera
+title: YOLO Object Detection on a Security Camera
 comments: true
 ---
 
 **Intro**
 
-The idea here is to rapidly develop (in a few hours) a system that applies state-of-the-art object detection ([YOLO](https://pjreddie.com/darknet/yolo/)) to images from a surveillance camera. This has the benefit of significantly reducing false detections, and lays the groundwork for more intelligent handling of detection of people, vehicles etc.
+The idea is to rapidly develop (in a few hours) a system that applies state-of-the-art object detection ([YOLO](https://pjreddie.com/darknet/yolo/)) to images from a security camera. This has the benefit of significantly reducing false detections, and lays the groundwork for more intelligent handling of detection of people, vehicles etc.
 
-**Approach**
+**Design**
 
-Although this is a rapid prototype, there's a desire for an elegant, sustainable, design. The camera automatically drops images into Dropbox once it detects motion (from video). Several new Java microservices are built on a [Digital Ocean](https://www.digitalocean.com/) droplet. The microservices communicate with each other via a local [Redis](https://redis.io/) message queue, and with Dropbox APIs. The overall flow is as follows:
+Although this is a rapid prototype, there is a desire for an elegant, sustainable, design. The camera automatically drops images into Dropbox once it detects motion (from video). Several new Java microservices are built on a [Digital Ocean](https://www.digitalocean.com/) droplet. The microservices communicate with each other via a local [Redis](https://redis.io/) message queue, and with Dropbox APIs. The overall flow is as follows:
 
 1. Camera detects motion and drops new image into a specific Dropbox folder.
 2. *Longpoll* microservice maintains a long poll connection with the Dropbox APIs, waits for a new image file notification, retrieves the image, and pushes a message into *new_image_queue*.
@@ -20,6 +20,18 @@ Although this is a rapid prototype, there's a desire for an elegant, sustainable
 **Results**
 
 The system has been running without issue for several weeks. Detection of vehicles and people works remarkably well. Only 1 in 5 motion detections from the camera result in a real notification event, providing a substantial decrease in false positives.
+
+Redis Events
+```
+127.0.0.1:6379> zrange events 0 -1
+  1) "{\"filename\":\"pa_2017-03-02_18-36-30_940.jpg\",\"objects\":[{\"truck\":47}]}"
+  2) "{\"filename\":\"pa_2017-03-02_18-36-35_193.jpg\",\"objects\":[{\"truck\":27},{\"car\":63}]}"
+  3) "{\"filename\":\"pa_2017-03-02_18-36-36_400.jpg\",\"objects\":[{\"car\":81}]}"
+  4) "{\"filename\":\"pa_2017-03-02_19-17-35_391.jpg\",\"objects\":[{\"person\":57}]}"
+  5) "{\"filename\":\"pa_2017-03-02_19-17-36_651.jpg\",\"objects\":[{\"person\":76}]}"
+  6) "{\"filename\":\"pa_2017-03-02_19-23-07_420.jpg\",\"objects\":[{\"person\":30},{\"person\":44},{\"truck\":26},{\"car\":55}]}"
+  7) "{\"filename\":\"pa_2017-03-02_19-23-17_440.jpg\",\"objects\":[{\"car\":58},{\"truck\":30}]}"
+```
 
 Vehicle Detection
 ![vehicle detection](/images/detection-vehicle.jpg)
