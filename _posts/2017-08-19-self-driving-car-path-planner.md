@@ -17,7 +17,7 @@ The simulator provides localization and sensor fusion every 20ms via the [uWebSo
 
 **Sensor Fusion Processing and Control**
 
-On each cycle, the planner iterates through sensor fusion data for all surrounding vehicles. It determines the closest forward and rear vehicle, as well as the closest side vehicles, both ahead and behind. It also tracks the velocity of the vehicles. Frenet coordinates are used to determine lane positions of vehicles as well as distances to vehicles along the road. Side vehicles are flagged if there is an unsafe gap (based on distance and relative velocity). If the forward gap is less than 20m, ego decelerates rapidly (0.4 mph per cycle), but if the forward gap is between 20m and 30m, a Proportional-Differential (PD) controller seeks to maintain a constant 25m distance and match the leader velocity as follows:
+On each cycle, the planner iterates through sensor fusion data for all surrounding vehicles. It determines the closest forward and rear vehicle, as well as the closest side vehicles, both ahead and behind. It also tracks the velocity of the vehicles. Frenet coordinates are used to determine lane positions of vehicles as well as distances to vehicles along the road. Side vehicles are flagged if there is an unsafe gap (based on distance and relative velocity). If the forward gap is less than 20m, ego decelerates rapidly, but if the forward gap is between 20m and 30m, a Proportional-Differential (PD) controller seeks to maintain a constant 25m distance and match the leader velocity as follows:
 
 ```
 
