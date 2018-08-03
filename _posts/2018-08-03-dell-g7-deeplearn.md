@@ -8,11 +8,11 @@ comments: true
 
 Download Ubuntu 16.04 iso:
 
-(http://releases.ubuntu.com/16.04/ubuntu-16.04.4-desktop-amd64.iso)
+http://releases.ubuntu.com/16.04/ubuntu-16.04.4-desktop-amd64.iso
 
 Install Rufus on Windows:
 
-(https://rufus.akeo.ie/)
+https://rufus.akeo.ie/
 
 Insert USB stick, open Rufus, select downloaded ISO, follow all defaults and recommendations.
 
@@ -72,7 +72,7 @@ Sat Jul 28 01:19:24 2018
 
 Download latest Cuda 9.0 (required by Tensorflow) runfile installer (local):
 
-(https://developer.nvidia.com/cuda-90-download-archive)
+https://developer.nvidia.com/cuda-90-download-archive
 
 
 Extract Cuda and install:
@@ -99,7 +99,7 @@ source .bashrc
 
 Download latest cuDNN for CUDA 9.0 (tarball):
 
-(https://developer.nvidia.com/rdp/cudnn-archive)
+https://developer.nvidia.com/rdp/cudnn-archive
 
 Extract cuDNN and copy files:
 
@@ -115,7 +115,7 @@ sudo chmod a+r /usr/local/cuda/include/cudnn.h
 **Install Anaconda**
 
 Download Anaconda:
-(https://www.anaconda.com/download/#linux)
+https://www.anaconda.com/download/#linux
 
 Install Anaconda:
 
@@ -127,7 +127,7 @@ chmod +x Anaconda3-5.2.0-Linux-x86_64.sh
 **Setup Conda env and Tensorflow**
 
 
-TF URLs: (https://www.tensorflow.org/install/install_linux#the_url_of_the_tensorflow_python_package)
+TF URLs: https://www.tensorflow.org/install/install_linux#the_url_of_the_tensorflow_python_package
 
 ```
 conda create -n tensorflow pip python=3.6
